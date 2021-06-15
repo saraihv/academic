@@ -1,0 +1,68 @@
+---
+title: "Lab 3 - Wind Turbine"
+author: "Sarai Hertz-Velazquez"
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+---
+
+
+  
+```{r}
+
+
+load("Block Island.RData")
+source ("weplot function.R")
+
+weplot(x = Date, y = Velocity.Wind, type= "line",
+       ylab= "Wind velocity (m/s)", color = "purple")
+
+timespan <- 50:100 #Index values between the 12th and 24th days
+weplot(x = Date[timespan], y = Velocity.Wind[timespan])
+
+Efficiency <- 0.20
+Air.Density <- 1.2
+Area <- 17907.8635236
+
+Time <- length(Date) #length of dataset (used to run the loop)
+
+#define outputs
+Wind.Power <- numeric() #creates an empty object (length of zero)
+Electric.Power <- numeric() #creates an empty object (length of zero)
+
+#Loop
+for(t in 1:Time){
+
+#calculate wind power
+Wind.Power[t] <- (1/2) * (Air.Density) * (Area) * (Velocity.Wind[t]) ^3
+
+#calculate electric power
+Electric.Power[t] <- Wind.Power[t] * Efficiency
+
+}
+
+Wind.Power <- Wind.Power / 1e6 #watts to megawatts
+Electric.Power <- Electric.Power / 1e6 #watts to megawatts
+
+#Calculate average power & total energy
+Average.Power <- mean(Electric.Power)  
+Total.Energy <- Average.Power * 8760 
+
+weplot(x = Date, y = Electric.Power, type= "point",
+       ylab= "Electric Power (MW)", color = "blue", xlab= "Time of Year")
+
+weplot(x=Velocity.Wind, y=Electric.Power, type="point",
+       ylab= "Electric Power (MW)", color = "magenta", xlab= "Time of Year")
+
+#Max amt of power turbine can produce
+max(Electric.Power)
+
+       
+```
+
+
+
+
+
+
+

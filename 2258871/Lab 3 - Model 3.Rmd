@@ -1,0 +1,75 @@
+---
+title: "Lab 3 - Wind Turbine"
+author: "Sarai Hertz-Velazquez"
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+---
+
+> mean(FiveTurbine.Power == 0)*100
+> mean(FiveTurbine.Power > 5.9)*100
+
+```{r}
+load("Block Island.RData")
+source ("weplot function.R")
+
+#define inputs
+cut.in <- 3
+cut.out <- 25
+a <- -6.8409
+b <- 0.8043
+Max.Power <- 6e+06
+
+weplot(x = Date, y = Velocity.Wind, type = "line")
+
+Time <- length(Date) #length of dataset (used to run the loop)
+
+#define outputs
+Electric.Power <- numeric() 
+
+#loop
+for (t in 1:Time){
+  
+  Electric.Power [t] <- (Max.Power) * (exp(a+b*Velocity.Wind [t])/(1+exp(a+b*Velocity.Wind[t]))) 
+  
+  if (Velocity.Wind [t] < cut.in){
+    Electric.Power [t] <- 0
+  }
+
+  if (Velocity.Wind [t] > cut.out){
+    Electric.Power [t] <- 0
+  }
+}
+
+Electric.Power <- Electric.Power / 1e6 #watts to megawatts
+
+#Calculate average power & total energy
+Average.Power <- mean(Electric.Power)  
+Total.Energy <- Average.Power * 8760 
+FiveTurbine.Power <- Electric.Power * 5
+
+weplot(x = FiveTurbine.Power, type= "hist",
+       color = "blue",
+       ylab= "Frequency", xlab= "Electric Power (MW)"
+)
+
+weplot(x=Velocity.Wind, y=Electric.Power, type="point",
+       ylab= "Electric Power (MW)", color = "magenta", xlab= "Wind Velocity (m/s)")
+
+weplot(x=Date, y=FiveTurbine.Power, type="line",
+       ylab= "Average Power (MW)", color = "magenta", xlab= "Date")
+
+mean(FiveTurbine.Power == 0)*100
+mean(FiveTurbine.Power > 5.9)*100
+
+
+
+
+
+```
+
+
+
+
+
+```

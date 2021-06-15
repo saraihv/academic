@@ -1,0 +1,45 @@
+---
+title: "Lab 3 - Wind Turbine"
+author: "Sarai Hertz-Velazquez"
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+---
+
+
+  
+```{r}
+load("Block Island.RData")
+source ("weplot function.R")
+
+weplot(x = Date, y = Electric.Power, type= "line",
+       ylab= "Electric Power (MW)", color = "blue", xlab= "Wind Velocity (m/s)")
+
+weplot(x=Velocity.Wind, y=Electric.Power, type="line",
+       ylab= "Electric Power (MW)", color = "magenta", xlab= "Wind Velocity (m/s)")
+
+#define inputs
+a <- -6.8409
+b <- 0.8043
+Max.Power <- 6e+06
+Time <- length(Date) #length of dataset (used to run the loop)
+
+#define outputs
+Electric.Power <- numeric() 
+
+#loop
+for (t in 1:Time){
+  
+Electric.Power [t] <- (Max.Power) * (exp(a+b*Velocity.Wind [t])/(1+exp(a+b*Velocity.Wind[t]))) 
+}
+
+
+
+```
+
+
+
+
+
+
+```
